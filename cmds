@@ -1,0 +1,12 @@
+az vm run-command invoke --no-wait --command-id RunPowerShellScript --scripts @azcmds.txt >> azvmout.txt --ids "/subscriptions/48f9fc36-26fd-4d3c-802b-70524301e2c0/resourceGroups/CAT_TEST_SERVER/providers/Microsoft.Compute/virtualMachines/DC-2022" "/subscriptions/48f9fc36-26fd-4d3c-802b-70524301e2c0/resourceGroups/CAT_TEST_SERVER/providers/Microsoft.Compute/virtualMachines/WS-2023"
+
+az vm list --query "[].{ids:id}" -o tsv > hosts.txt
+
+az vm run-command invoke --no-wait --command-id RunPowerShellScript --scripts @azcmds.txt >> azvmout.txt --ids @hosts.txt
+az vm list --query "[?storageProfile.osDisk.osType=='Windows'].{ServerType:storageProfile.imageReference.offer,ids:id}" -o table
+
+az vm list --query "[?storageProfile.osDisk.osType=='Linux'].{ServerType:storageProfile.imageReference.offer,ids:id}" -o table
+az vm list --query "[?storageProfile.osDisk.osType=='Windows'].{ids:id}" -o tsv > hosts.txt
+
+az vm run-command invoke --no-wait --command-id RunPowerShellScript --scripts @azcmds.txt >> azvmout.txt --ids @hosts.txt
+
